@@ -25,8 +25,8 @@ import java.util.UUID;
  */
 public class VNPBungee extends Plugin {
 
-    Map<UUID, VanishStatus> statusUUIDMap = new HashMap<>();
-    Map<String, VanishStatus> statusNameMap = new HashMap<>();
+    Map<UUID, VanishStatus> statusUUIDMap = new HashMap<UUID, VanishStatus>();
+    Map<String, VanishStatus> statusNameMap = new HashMap<String, VanishStatus>();
 
     public void onEnable() {
         getProxy().getPluginManager().registerListener(VNPBungee.getInstance(), new EventListeners());
