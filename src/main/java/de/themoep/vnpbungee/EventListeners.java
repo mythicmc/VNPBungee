@@ -28,20 +28,17 @@ public class EventListeners implements Listener {
     
     @EventHandler
     public void onPluginMessageReceive(PluginMessageEvent event) {
-        VNPBungee.getInstance().getLogger().info("Received new plugin message with tag " + event.getTag() + " instanceof ProxiedPlayer: " + (event.getReceiver() instanceof ProxiedPlayer));
         if(event.getReceiver() instanceof ProxiedPlayer && event.getTag().equals("vanishStatus")) {
             ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
             ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
             byte status = in.readByte();
             ProxyServer.getInstance().getPluginManager().callEvent(new VanishStatusChangeEvent(player, status == 1));
-            VNPBungee.getInstance().getLogger().info(player.getName() + " received new plugin message with data " + status);
         }
     }
 
     @EventHandler
     public void onStatusChange(VanishStatusChangeEvent event) {
         VNPBungee.getInstance().setVanished(event.getPlayer(), event.isVanishing());
-        VNPBungee.getInstance().getLogger().info(event.getPlayer().getName() + " " + (event.isVanishing() ? "" : "un") + "vanished!");
     }
 
     @EventHandler
