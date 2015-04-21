@@ -28,11 +28,6 @@
             <artifactId>bungeecord-api</artifactId>
             <version>1.8-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord</artifactId>
-            <version>b1052</version>
-        </dependency>
     </dependencies>
 
     <profiles>
