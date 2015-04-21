@@ -49,6 +49,7 @@ public class EventListeners implements Listener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("check");
         event.getPlayer().getServer().sendData("vanishStatus", out.toByteArray());
+        VNPBungee.getInstance().clearStatusData(event.getPlayer());
     }
 
     @EventHandler
