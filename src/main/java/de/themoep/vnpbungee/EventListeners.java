@@ -40,8 +40,8 @@ public class EventListeners implements Listener {
 
     @EventHandler
     public void onStatusChange(VanishStatusChangeEvent event) {
-        VNPBungee.getInstance().setVanished(event.getPlayer(), event.isVanishing());
-        VNPBungee.getInstance().getLogger().info(event.getPlayer().getName() + " " + (event.isVanishing() ? "" : "un") + "vanished!");
+        VNPBungee.VanishStatus pre = VNPBungee.getInstance().setVanished(event.getPlayer(), event.isVanishing());
+        VNPBungee.getInstance().getLogger().info(event.getPlayer().getName() + " " + (event.isVanishing() ? "" : "un") + "vanished! Previous status: " + pre.toString());
     }
     
     @EventHandler
