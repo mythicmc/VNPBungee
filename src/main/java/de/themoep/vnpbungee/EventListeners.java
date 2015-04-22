@@ -47,8 +47,7 @@ public class EventListeners implements Listener {
     @EventHandler
     public void onServerSwitch(ServerSwitchEvent event) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeChars("check");
-        event.getPlayer().getServer().sendData("vanishStatus", out.toByteArray());
+        event.getPlayer().getServer().sendData("vanishStatus", "check".getBytes());
         VNPBungee.getInstance().clearStatusData(event.getPlayer());
     }
 
