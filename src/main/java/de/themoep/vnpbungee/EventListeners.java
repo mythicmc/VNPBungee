@@ -1,11 +1,13 @@
 package de.themoep.vnpbungee;
 
 import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PluginMessageEvent;
+import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -32,15 +34,21 @@ public class EventListeners implements Listener {
             ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
             ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
             byte status = in.readByte();
-            BungeeCord.getInstance().getPluginManager().callEvent(new VanishStatusChangeEvent(player, status == 1));
-            VNPBungee.getInstance().getLogger().info(player.getName() + " received new plugin message with data " + status);
+            ProxyServer.getInstance().getPluginManager().callEvent(new VanishStatusChangeEvent(player, status == 1));
         }
     }
 
     @EventHandler
     public void onStatusChange(VanishStatusChangeEvent event) {
-        VNPBungee.getInstance().setVanished(event.getPlayer(), event.isVanishing());
-        VNPBungee.getInstance().getLogger().info(event.getPlayer().getName() + " " + (event.isVanishing() ? "" : "un") + "vanished!");
+        VNPBungee.VanishStatus pre = VNPBungee.getInstance().setVanished(event.getPlayer(), event.isVanishing());
+        VNPBungee.getInstance().getLogger().info(event.getPlayer().getName() + " " + (event.isVanishing() ? "" : "un") + "vanished! Previous status: " + pre.toString());
+    }
+    
+    @EventHandler
+    public void onServerSwitch(ServerSwitchEvent event) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        event.getPlayer().getServer().sendData("vanishStatus", "check".getBytes());
+        VNPBungee.getInstance().clearStatusData(event.getPlayer());
     }
 
     @EventHandler

@@ -1,6 +1,6 @@
 package de.themoep.vnpbungee;
 
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -30,6 +30,7 @@ public class VNPBungee extends Plugin {
 
     public void onEnable() {
         getProxy().getPluginManager().registerListener(VNPBungee.getInstance(), new EventListeners());
+        getProxy().registerChannel("vanishStatus");
     }
 
     /**
@@ -37,7 +38,7 @@ public class VNPBungee extends Plugin {
      * @return Itself
      */
     public static VNPBungee getInstance() {
-        return (VNPBungee) BungeeCord.getInstance().getPluginManager().getPlugin("VNPBungee");
+        return (VNPBungee) ProxyServer.getInstance().getPluginManager().getPlugin("VNPBungee");
     }
 
     /**
