@@ -18,8 +18,25 @@ import net.md_5.bungee.api.plugin.Event;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Inspired by mbaxter's original vnp VanishStatusChangeEvent (GPLv2)
- * https://github.com/mbax/VanishNoPacket/blob/master/src/main/java/org/kitteh/vanish/event/VanishStatusChangeEvent.java
+ *  
+ * Copyright notice of mbaxter's original VNP VanishStatusChangeEvent:
+ * 
+ * Copyright 2012-2013 Matt Baxter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *            http:www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *  
+ * You can find the source of the VanishNoPacket Bukkit plugin here:
+ * https://github.com/mbax/VanishNoPacket/
  */
 
 /**
