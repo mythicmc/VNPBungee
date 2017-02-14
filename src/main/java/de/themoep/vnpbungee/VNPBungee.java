@@ -25,10 +25,12 @@ import java.util.UUID;
  */
 public class VNPBungee extends Plugin {
 
+    private static VNPBungee instance;
     Map<UUID, VanishStatus> statusUUIDMap = new HashMap<UUID, VanishStatus>();
     Map<String, VanishStatus> statusNameMap = new HashMap<String, VanishStatus>();
 
     public void onEnable() {
+        instance = this;
         getProxy().getPluginManager().registerListener(VNPBungee.getInstance(), new EventListeners());
         getProxy().registerChannel("vanishStatus");
     }
@@ -38,15 +40,25 @@ public class VNPBungee extends Plugin {
      * @return Itself
      */
     public static VNPBungee getInstance() {
-        return (VNPBungee) ProxyServer.getInstance().getPluginManager().getPlugin("VNPBungee");
+        return instance;
+    }
+
+    /**
+     * Check if one player can se another one
+     * @param watcher   The one that watches
+     * @param player    The player he tries to see
+     * @return          If the watcher can see the player
+     */
+    public static boolean canSee(ProxiedPlayer watcher, ProxiedPlayer player) {
+        return getInstance().getVanishStatus(player) != VanishStatus.VANISHED || watcher.hasPermission("vanish.see");
     }
 
     /**
      * Set the vanish status of a player<br />
      * This will <strong>not</strong> fire a VanishStatusChangeEvent!
-     * @param player The ProxiedPlayer to set
-     * @param vanished If the user is vanished or not
-     * @return The previously assigned VanishStatus, VanishStatus.UNKNOWN if there weren't one!
+     * @param player    The ProxiedPlayer to set
+     * @param vanished  If the user is vanished or not
+     * @return          The previously assigned VanishStatus, VanishStatus.UNKNOWN if there weren't one!
      */
     VanishStatus setVanished(ProxiedPlayer player, boolean vanished) {
         VanishStatus pre = statusUUIDMap.put(player.getUniqueId(), (vanished) ? VanishStatus.VANISHED : VanishStatus.VISIBLE);
@@ -57,9 +69,9 @@ public class VNPBungee extends Plugin {
     /**
      * Set the vanish status of a player<br />
      * This will <strong>not</strong> fire a VanishStatusChangeEvent!
-     * @param player The ProxiedPlayer to set
-     * @param status The VanishStatus to set
-     * @return The previously assigned status, VanishStatus.UNKNOWN if there weren't one!
+     * @param player    The ProxiedPlayer to set
+     * @param status    The VanishStatus to set
+     * @return          The previously assigned status, VanishStatus.UNKNOWN if there weren't one!
      */
     VanishStatus setVanishStatus(ProxiedPlayer player, VanishStatus status) {
         VanishStatus pre = statusUUIDMap.put(player.getUniqueId(), status);
@@ -69,18 +81,27 @@ public class VNPBungee extends Plugin {
 
     /**
      * Get if a player is vanished or not
-     * @param player The ProxiedPlayer to check
-     * @return The VanishStatus of the player, VanishStatus.UNKNOWN if we don't know it!
+     * @param player    The ProxiedPlayer to check
+     * @return          The VanishStatus of the player, VanishStatus.UNKNOWN if we don't know it!
      */
     public VanishStatus getVanishStatus(ProxiedPlayer player) {
-        VanishStatus status = statusUUIDMap.get(player.getUniqueId());
+        return getVanishStatus(player.getUniqueId());
+    }
+
+    /**
+     * Get if a player is vanished or not
+     * @param playerId  The UUID of the player to check
+     * @return          The VanishStatus of the player, VanishStatus.UNKNOWN if we don't know it!
+     */
+    public VanishStatus getVanishStatus(UUID playerId) {
+        VanishStatus status = statusUUIDMap.get(playerId);
         return (status == null) ? VanishStatus.UNKNOWN : status;
     }
 
     /**
      * Get if a player is vanished or not
-     * @param playername The name of the player to check
-     * @return The VanishStatus of the player, VanishStatus.UNKNOWN if we don't know it!
+     * @param playername    The name of the player to check
+     * @return              The VanishStatus of the player, VanishStatus.UNKNOWN if we don't know it!
      */
     public VanishStatus getVanishStatus(String playername) {
         VanishStatus status = statusNameMap.get(playername);
@@ -90,8 +111,8 @@ public class VNPBungee extends Plugin {
     /**
      * Clears the player's status data<br />
      * This will <strong>not</strong> fire a VanishStatusChangeEvent!
-     * @param player The ProxiedPlayer to clear the status data of
-     * @return The previously assigned status, VanishStatus.UNKNOWN if there weren't one!
+     * @param player    The ProxiedPlayer to clear the status data of
+     * @return          The previously assigned status, VanishStatus.UNKNOWN if there weren't one!
      */
     VanishStatus clearStatusData(ProxiedPlayer player) {
         VanishStatus pre = statusUUIDMap.remove(player.getUniqueId());
