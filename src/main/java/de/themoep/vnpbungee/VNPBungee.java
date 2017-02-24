@@ -50,7 +50,9 @@ public class VNPBungee extends Plugin {
      * @return          If the watcher can see the player
      */
     public boolean canSee(ProxiedPlayer watcher, ProxiedPlayer player) {
-        return getVanishStatus(player) != VanishStatus.VANISHED || watcher.hasPermission("vanish.see");
+        return getVanishStatus(player) != VanishStatus.VANISHED
+                || (getVanishStatus(watcher) == VanishStatus.UNKNOWN && getVanishStatus(player) == VanishStatus.UNKNOWN)
+                || watcher.hasPermission("vanish.see");
     }
 
     /**
