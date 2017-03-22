@@ -31,7 +31,7 @@ public class VNPBungee extends Plugin {
 
     public void onEnable() {
         instance = this;
-        getProxy().getPluginManager().registerListener(VNPBungee.getInstance(), new EventListeners());
+        getProxy().getPluginManager().registerListener(VNPBungee.getInstance(), new EventListeners(this));
         getProxy().registerChannel("vanishStatus");
     }
 

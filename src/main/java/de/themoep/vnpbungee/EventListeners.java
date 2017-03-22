@@ -1,15 +1,20 @@
 package de.themoep.vnpbungee;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
+import net.md_5.bungee.api.event.TabCompleteEvent;
+import net.md_5.bungee.api.event.TabCompleteResponseEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * VNPBungee - Bungee bridge for VanishNoPacket
@@ -27,32 +32,59 @@ import net.md_5.bungee.event.EventHandler;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class EventListeners implements Listener {
-    
+
+    private final VNPBungee plugin;
+
+    public EventListeners(VNPBungee plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onPluginMessageReceive(PluginMessageEvent event) {
         if(event.getReceiver() instanceof ProxiedPlayer && event.getTag().equals("vanishStatus")) {
             ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
             ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
             byte status = in.readByte();
-            ProxyServer.getInstance().getPluginManager().callEvent(new VanishStatusChangeEvent(player, status == 1));
+            plugin.getProxy().getPluginManager().callEvent(new VanishStatusChangeEvent(player, status == 1));
         }
     }
 
     @EventHandler
     public void onStatusChange(VanishStatusChangeEvent event) {
-        VNPBungee.VanishStatus pre = VNPBungee.getInstance().setVanished(event.getPlayer(), event.isVanishing());
-        VNPBungee.getInstance().getLogger().info(event.getPlayer().getName() + " " + (event.isVanishing() ? "" : "un") + "vanished! Previous status: " + pre.toString());
+        VNPBungee.VanishStatus pre = plugin.setVanished(event.getPlayer(), event.isVanishing());
+        plugin.getLogger().info(event.getPlayer().getName() + " " + (event.isVanishing() ? "" : "un") + "vanished! Previous status: " + pre.toString());
     }
     
     @EventHandler
     public void onServerSwitch(ServerSwitchEvent event) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
         event.getPlayer().getServer().sendData("vanishStatus", "check".getBytes());
-        VNPBungee.getInstance().clearStatusData(event.getPlayer());
+        plugin.clearStatusData(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerDisconnectEvent event) {
-        VNPBungee.getInstance().clearStatusData(event.getPlayer());
+        plugin.clearStatusData(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTabCompletion(TabCompleteEvent event) {
+        handleTabEvent(event.getSender(), event.getSuggestions());
+    }
+
+    @EventHandler
+    public void onTabBackendCompletion(TabCompleteResponseEvent event) {
+        handleTabEvent(event.getSender(), event.getSuggestions());
+    }
+
+    private void handleTabEvent(Connection senderConnection, List<String> suggestions) {
+        if (senderConnection instanceof ProxiedPlayer) {
+            ProxiedPlayer sender = (ProxiedPlayer) senderConnection;
+            for (Iterator<String> it = suggestions.iterator(); it.hasNext(); ) {
+                ProxiedPlayer player = plugin.getProxy().getPlayer(it.next());
+                if (player != null && !plugin.canSee(sender, player)) {
+                    it.remove();
+                }
+            }
+        }
     }
 }
