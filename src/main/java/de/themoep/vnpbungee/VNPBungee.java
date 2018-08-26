@@ -1,6 +1,6 @@
 package de.themoep.vnpbungee;
 
-import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -26,8 +26,8 @@ import java.util.UUID;
 public class VNPBungee extends Plugin {
 
     private static VNPBungee instance;
-    Map<UUID, VanishStatus> statusUUIDMap = new HashMap<UUID, VanishStatus>();
-    Map<String, VanishStatus> statusNameMap = new HashMap<String, VanishStatus>();
+    Map<UUID, VanishStatus> statusUUIDMap = new HashMap<>();
+    Map<String, VanishStatus> statusNameMap = new HashMap<>();
 
     public void onEnable() {
         instance = this;
@@ -49,10 +49,12 @@ public class VNPBungee extends Plugin {
      * @param player    The player he tries to see
      * @return          If the watcher can see the player
      */
-    public boolean canSee(ProxiedPlayer watcher, ProxiedPlayer player) {
-        return getVanishStatus(player) == VanishStatus.VISIBLE
-                || (getVanishStatus(watcher) == VanishStatus.UNKNOWN && getVanishStatus(player) == VanishStatus.UNKNOWN)
-                || watcher.hasPermission("vanish.see");
+    public boolean canSee(CommandSender watcher, ProxiedPlayer player) {
+        return watcher.hasPermission("vanish.see")
+                || getVanishStatus(player) == VanishStatus.VISIBLE
+                || (watcher instanceof ProxiedPlayer
+                        && getVanishStatus((ProxiedPlayer) watcher) == VanishStatus.UNKNOWN
+                        && getVanishStatus(player) == VanishStatus.UNKNOWN);
     }
 
     /**
