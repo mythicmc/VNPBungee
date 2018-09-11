@@ -33,6 +33,7 @@ public class VNPBungee extends Plugin {
         instance = this;
         getProxy().getPluginManager().registerListener(VNPBungee.getInstance(), new EventListeners(this));
         getProxy().registerChannel("vanishStatus");
+        getProxy().registerChannel("vanishnopacket:status");
     }
 
     /**

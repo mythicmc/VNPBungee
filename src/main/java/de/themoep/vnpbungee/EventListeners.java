@@ -41,7 +41,8 @@ public class EventListeners implements Listener {
 
     @EventHandler
     public void onPluginMessageReceive(PluginMessageEvent event) {
-        if(event.getReceiver() instanceof ProxiedPlayer && event.getTag().equals("vanishStatus")) {
+        if(event.getReceiver() instanceof ProxiedPlayer
+                && (event.getTag().equals("vanishStatus") || event.getTag().equals("vanishnopacket:status"))) {
             ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
             ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
             byte status = in.readByte();
@@ -58,6 +59,7 @@ public class EventListeners implements Listener {
     @EventHandler
     public void onServerSwitch(ServerSwitchEvent event) {
         event.getPlayer().getServer().sendData("vanishStatus", "check".getBytes());
+        event.getPlayer().getServer().sendData("vanishnopacket:status", "check".getBytes());
         plugin.clearStatusData(event.getPlayer());
     }
 
