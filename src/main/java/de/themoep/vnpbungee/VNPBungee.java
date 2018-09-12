@@ -1,8 +1,10 @@
 package de.themoep.vnpbungee;
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import us.myles.ViaVersion.bungee.service.ProtocolDetectorService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +31,14 @@ public class VNPBungee extends Plugin {
     Map<UUID, VanishStatus> statusUUIDMap = new HashMap<>();
     Map<String, VanishStatus> statusNameMap = new HashMap<>();
 
+    private boolean viaVersionEnabled = false;
+
     public void onEnable() {
         instance = this;
         getProxy().getPluginManager().registerListener(VNPBungee.getInstance(), new EventListeners(this));
         getProxy().registerChannel("vanishStatus");
         getProxy().registerChannel("vanishnopacket:status");
+        viaVersionEnabled = getProxy().getPluginManager().getPlugin("ViaVersion") != null;
     }
 
     /**
@@ -124,7 +129,14 @@ public class VNPBungee extends Plugin {
         statusNameMap.remove(player.getName());
         return (pre == null) ? VanishStatus.UNKNOWN : pre;
     }
-    
+
+    int getServerVersion(ServerInfo server) {
+        if (viaVersionEnabled) {
+            return ProtocolDetectorService.getProtocolId(server.getName());
+        }
+        return -1;
+    }
+
     public enum VanishStatus {
         VANISHED,
         VISIBLE,
