@@ -58,7 +58,8 @@ public class EventListeners implements Listener {
     
     @EventHandler
     public void onServerSwitch(ServerSwitchEvent event) {
-        if (plugin.getServerVersion(event.getPlayer().getServer().getInfo()) < 386) {
+        int serverVersion = plugin.getServerVersion(event.getPlayer().getServer().getInfo());
+        if (serverVersion > 0 && serverVersion < 386) {
             event.getPlayer().getServer().sendData("vanishStatus", "check".getBytes());
         } else {
             event.getPlayer().getServer().sendData("vanishnopacket:status", "check".getBytes());
