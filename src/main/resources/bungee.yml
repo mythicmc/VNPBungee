@@ -1,5 +1,0 @@
-name: VNPBungee
-main: de.themoep.vnpbungee.VNPBungee
-version: '@project.version@'
-author: Phoenix616
-softdepends: [ViaVersion]

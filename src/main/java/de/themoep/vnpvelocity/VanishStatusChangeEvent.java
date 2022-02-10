@@ -1,7 +1,6 @@
-package de.themoep.vnpbungee;
+package de.themoep.vnpvelocity;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Event;
+import com.velocitypowered.api.proxy.Player;
 
 /**
  * VNPBungee - Bungee bridge for VanishNoPacket
@@ -42,12 +41,12 @@ import net.md_5.bungee.api.plugin.Event;
 /**
  * An event fired whenever a player changes their visibility
  */
-public final class VanishStatusChangeEvent extends Event {
+public final class VanishStatusChangeEvent {
 
     private final boolean vanishing;
-    private final ProxiedPlayer player;
+    private final Player player;
 
-    public VanishStatusChangeEvent(ProxiedPlayer player, boolean vanishing) {
+    public VanishStatusChangeEvent(Player player, boolean vanishing) {
         this.vanishing = vanishing;
         this.player = player;
     }
@@ -57,7 +56,7 @@ public final class VanishStatusChangeEvent extends Event {
      *
      * @return the player changing visibility
      */
-    public ProxiedPlayer getPlayer() {
+    public Player getPlayer() {
         return this.player;
     }
 
