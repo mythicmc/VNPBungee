@@ -37,7 +37,7 @@ import java.util.UUID;
 @Plugin(
     id = "vnpvelocity",
     name = "VNPVelocity",
-    version = "1.2-SNAPSHOT",
+    version = "2.0.0",
     dependencies = {@Dependency(id = "viaversion", optional = true)},
     description = "Velocity bridge for VanishNoPacket",
     authors = {"Phoenix616", "retrixe"}
