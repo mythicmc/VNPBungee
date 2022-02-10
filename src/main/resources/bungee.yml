@@ -1,5 +1,5 @@
-name: ${project.name}
+name: VNPBungee
 main: de.themoep.vnpbungee.VNPBungee
-version: '${minecraft.plugin.version}'
+version: '@project.version@'
 author: Phoenix616
 softdepends: [ViaVersion]
