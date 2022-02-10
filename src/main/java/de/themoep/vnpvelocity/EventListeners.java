@@ -55,7 +55,7 @@ public class EventListeners {
         VNPVelocity.VanishStatus pre = plugin.setVanished(event.getPlayer(), event.isVanishing());
         plugin.getLogger().info(event.getPlayer().getUsername() + " " + (event.isVanishing() ? "" : "un") + "vanished! Previous status: " + pre.toString());
     }
-    
+
     @Subscribe
     public void onServerSwitch(ServerPostConnectEvent event) {
         ServerConnection serverConnection = event.getPlayer().getCurrentServer().orElse(null);
@@ -67,7 +67,7 @@ public class EventListeners {
         if (serverVersion > 0 && serverVersion < 386) {
             pluginChannel = plugin.LEGACY_VANISH_STATUS_CHANNEL;
         }
-        serverConnection.getServer().sendPluginMessage(pluginChannel, "check".getBytes());
+        serverConnection.sendPluginMessage(pluginChannel, "check".getBytes());
         plugin.clearStatusData(event.getPlayer());
     }
 
